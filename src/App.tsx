@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Alert from "./components/Alert";
 import Button from "./components/Button";
 import ListGroup from "./components/ListGroup";
@@ -5,17 +6,24 @@ import ListGroup from "./components/ListGroup";
 function App() {
   const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
-  const handleSelectItem = (item: string) => {
-    console.log(item);
+  const handleOnClick = () => {
+    setAlertVisibility(true);
   };
+  const handleOnClose = () => {
+    setAlertVisibility(false);
+  };
+
+  // const handleSelectItem = (item: string) => {
+  //   console.log(item);
+  // };
+
+  const [alertVisible, setAlertVisibility] = useState(false);
 
   return (
     <div>
-      <Button>Blue Button</Button>
-      <Alert>
-        Hello <span>World</span>
-      </Alert>
-      <ListGroup items={items} heading="Cities" onSelectItem={handleSelectItem} />
+      {alertVisible && <Alert onClose={handleOnClose}>!!!ALERT!!!</Alert>}
+      <Button onClick={handleOnClick}>My Button</Button>
+      {/* <ListGroup items={items} heading="Cities" onSelectItem={handleSelectItem} /> */}
     </div>
   );
 }
