@@ -9,19 +9,25 @@ function Square({ value, highlight, onSquareClick }) {
 }
 
 function Board({ xIsNext, squares, status, onPlay }) {
+  const { winner, winningLine } = status;
   function handleClick(i) {
-    if (squares[i] || status.winner) return;
+    if (squares[i] || winner) return;
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? "X" : "O";
     onPlay(nextSquares);
   }
 
-  const statusMsg = status.winner
-    ? `Winner: ${status.winner}`
-    : `Next player: ${xIsNext ? "X" : "O"}`;
+  const statusMsg = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? "X" : "O"}`;
 
   function renderSquare(i) {
-    return <Square key={i} value={squares[i]} onSquareClick={() => handleClick(i)} />;
+    return (
+      <Square
+        key={i}
+        value={squares[i]}
+        highlight={winningLine && winningLine.indexOf(i) >= 0}
+        onSquareClick={() => handleClick(i)}
+      />
+    );
   }
 
   function renderRow(n) {
@@ -76,7 +82,6 @@ export default function Game() {
   }
 
   function jumpTo(nextMove) {
-    console.log(nextMove);
     setCurrentMove(nextMove);
   }
 
