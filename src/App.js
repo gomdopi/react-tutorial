@@ -71,12 +71,7 @@ export default function Game() {
 
   function handlePlay(nextSquares) {
     const nextMove = currentMove + 1;
-    const nextHistory = descending
-      ? [...history.slice(0, nextMove), { squares: nextSquares, move: nextMove }]
-      : [
-          { squares: nextSquares, move: nextMove },
-          ...history.slice(history.findIndex(({ _, move }) => move === currentMove)),
-        ];
+    const nextHistory = [...history.slice(0, nextMove), { squares: nextSquares, move: nextMove }];
     setCurrentMove(nextMove);
     setHistory(nextHistory);
   }
@@ -86,26 +81,26 @@ export default function Game() {
   }
 
   function handleToggle() {
-    const newDescending = !descending;
-    const newHistory = history.slice().reverse();
-
-    setDescending(newDescending);
-    setHistory(newHistory);
+    setDescending(!descending);
   }
 
-  const moves = history.map(({ _, move }) => {
-    let description = move > 0 ? `move #${move}` : "game start";
+  function renderMoves() {
+    const orderedHistory = descending ? history : history.toSorted((a, b) => b.move - a.move);
 
-    return (
-      <li key={move}>
-        {move === currentMove ? (
-          `You are at ${description}`
-        ) : (
-          <button onClick={() => jumpTo(move)}>Go to {description}</button>
-        )}
-      </li>
-    );
-  });
+    return orderedHistory.map(({ _, move }) => {
+      let description = move > 0 ? `move #${move}` : "game start";
+
+      return (
+        <li key={move}>
+          {move === currentMove ? (
+            `You are at ${description}`
+          ) : (
+            <button onClick={() => jumpTo(move)}>Go to {description}</button>
+          )}
+        </li>
+      );
+    });
+  }
 
   return (
     <div className="game">
@@ -114,7 +109,7 @@ export default function Game() {
       </div>
       <div className="game-info">
         <button onClick={handleToggle}>{toggleDesc}</button>
-        <ol>{moves}</ol>
+        <ol>{renderMoves()}</ol>
       </div>
     </div>
   );
